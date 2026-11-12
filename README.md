@@ -131,6 +131,44 @@ The suite includes actual stdio MCP initialization/tool-discovery checks,
 validation security regression tests, and authorization tests for the
 read-only adapter interface.
 
+
+## Evidence-backed payment investigations (experimental)
+
+The \`investigate_payment(pacs008_xml, pacs002_xml)\` MCP tool
+correlates supplied pacs.008 and pacs.002 messages by original message ID
+**and** exact transaction identifiers. It returns a read-only evidence ledger,
+reported status codes, interpretation limits, and safe human-reviewed
+recommendations. It refuses to attribute unrelated statuses to a payment.
+
+Example (Python API, synthetic messages):
+
+\`\`\`python
+from iso20022_mcp import generate, parser
+from iso20022_mcp.investigate import investigate_payment
+
+original = generate.generate_pacs008()
+p = parser.parse_message(original)
+status = generate.generate_pacs002(
+    "AC04", p["msg_id"], p["transactions"][0]["end_to_end_id"]
+)
+report = investigate_payment(original, status)
+assert report["cases"][0]["correlation"] == "matched"
+assert report["cases"][0]["reported_reasons"][0]["code"] == "AC04"
+\`\`\`
+
+The engine does not query live banking systems, verify real account status,
+apply CBPR+/SEPA business rules or initiate any repair. A reason reported in
+pacs.002 remains a bank-reported reason, not an independently verified cause.
+
+Synthetic, transparent capability comparison:
+
+\`\`\`bash
+python -m evals.compare_investigation
+\`\`\`
+
+This comparison demonstrates exact correlation, unknown-code safety, and
+provenance in fixture cases; it is **not** a real-world accuracy study.
+
 ## Roadmap
 
 - Official XSD validation · pain.001 and camt.053 · MT103 → pacs.008 (subset) · remote HTTP deployment with auth and OpenTelemetry

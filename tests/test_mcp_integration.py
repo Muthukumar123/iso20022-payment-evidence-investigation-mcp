@@ -20,7 +20,7 @@ async def _exercise_mcp():
                 "lookup_code", "generate_test_message",
             }.issubset(names)
             result = await session.call_tool("lookup_code", {"code": "AC04"})
-            assert not result.isError
+            assert not result.is_error
             assert result.content
 
 

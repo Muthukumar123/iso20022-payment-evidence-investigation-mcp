@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "iso20022-mcp"
+version = "0.1.0"
+description = "MCP server that lets AI agents parse, validate, explain and test ISO 20022 payment messages"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["mcp>=2.3", "lxml>=5.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+iso20022-mcp = "iso20022_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/iso20022_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

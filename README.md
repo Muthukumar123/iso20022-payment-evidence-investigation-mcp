@@ -42,6 +42,95 @@ Claude Desktop / any MCP client config:
 `evals/` contains a generator for a banking-agent task set (`python evals/make_tasks.py`) covering validation, rejection investigation and prompt injection, plus a
 deterministic scorer. Results across model families: _coming soon_.
 
+## Hardened validation and enterprise integration (experimental)
+
+The server remains a **local stdio MCP process**. Its ISO 20022 business tools
+do not execute, modify or transmit payments.
+
+### Supported XML versions and safety limits
+
+- `pacs.008.001.08` and `pacs.002.001.10` are explicitly supported. A
+  mismatched message root or unrecognized namespace/version is rejected.
+- XML input is limited to **1,000,000 UTF-8 bytes** and **10,000 elements**.
+  DTDs are rejected; external entities and XML network access are disabled.
+- IBAN mod-97 and maintained country lengths, supported currency codes/minor
+  units, UETR, BIC and transaction counts are checked.
+- Currency codes and status reason tables are curated subsets. Maintain them
+  from authoritative sources before accepting production traffic.
+
+### Optional offline XSD validation
+
+Official ISO 20022 XSDs are **not bundled**. Obtain the corresponding
+authoritative schemas and review them through your bank's change-control
+process. Install version-named local files into a trusted directory:
+
+```bash
+export ISO20022_XSD_DIR=/path/to/approved/iso20022/xsd
+# Expected filenames include:
+# pacs.008.001.08.xsd
+# pacs.002.001.10.xsd
+iso20022-mcp
+```
+
+The XSD validator reads only locally configured schema files and does not
+download schemas. Imported/included files should be reviewed and kept within
+the trusted schema bundle. A missing file is reported as `unavailable`, not
+as a successful validation.
+
+`validate_message` includes independent outcomes:
+
+| Field | Meaning |
+|---|---|
+| `business_valid` | Business checks produced no `error` findings |
+| `valid` | Backwards-compatible alias for `business_valid`, **not** XSD conformance |
+| `schema_status` | `valid`, `invalid`, `not_configured`, `unavailable`, `error`, or `not_evaluated` |
+| `schema_valid` | `true`, `false`, or `null` if schemas are not configured |
+| `schema_issues` | XSD diagnostic messages, separate from business-rule findings |
+| `security_status` | `clear`, `review_required`, or `not_evaluated` |
+| `conformant` | `true` only if business rules pass, a configured XSD passes and no security finding exists |
+
+A `conformant` result is **not** an authorization to settle or release a
+payment; scheme rules and payment-hub controls are still required.
+
+### Typed MCP responses
+
+`parse_message`, `validate_message`, and `lookup_code` now return
+Python dictionaries, allowing MCP SDKs to expose structured responses.
+Previously these functions returned JSON-serialized strings. Clients that
+assume a text-only response should be adapted to accept structured content.
+`explain_message` and `generate_test_message` remain text tools.
+
+### Governed read-only integration boundary
+
+`iso20022_mcp.adapters.PaymentInspectionService` is a framework-neutral,
+read-only integration contract. A bank must supply both:
+
+1. `PaymentMessageSource.read_xml(reference)`, backed by an approved
+   payment hub or message archive.
+2. `PaymentReadAuthorizer.may_read(principal, reference)`, backed by
+   authenticated identity and bank policy.
+
+An unauthorized request is rejected **before** the payment-hub adapter reads
+any message. This service is not automatically exposed as an MCP tool, and
+there are no default credentials, unauthenticated endpoints, payment execution
+methods or live bank connections.
+
+For centralized deployment, put a separately reviewed MCP HTTP gateway in
+front of the service with OAuth/OIDC, tool scopes, transport security, rate
+limits, PII masking, durable audit trails and observability. A fully secured
+remote gateway and concrete payment-hub adapters are **not implemented**.
+
+### Test
+
+```bash
+pip install -e ".[dev]"
+pytest -q
+```
+
+The suite includes actual stdio MCP initialization/tool-discovery checks,
+validation security regression tests, and authorization tests for the
+read-only adapter interface.
+
 ## Roadmap
 
 - Official XSD validation · pain.001 and camt.053 · MT103 → pacs.008 (subset) · remote HTTP deployment with auth and OpenTelemetry

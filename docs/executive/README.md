@@ -1,63 +1,60 @@
-# Payment Evidence Intelligence (PEI) — Executive Architecture
+# PEI — Payment Evidence Intelligence | Executive Architecture
 
-**Working platform name:** Payment Evidence Intelligence (PEI). Subject to legal/trademark review before external branding.
+This folder contains an **eleven-slide, fully editable PowerPoint presentation** for business sponsors, CIO/CTO, banking architects, risk and control stakeholders.
 
-This directory contains an **editable seven-slide PowerPoint** for executive sponsors, payment operations, risk officers and enterprise architects.
+**Product statement:** *From rejection codes to defensible decisions.* Build a read-only, evidence-first, AI-assisted investigation capability for ISO 20022 payment exceptions—not another XML validation API and not an autonomous payment executor.
 
-## What we are building
-An **evidence-first, AI-assisted payment exception investigation platform**. A governed AI agent interprets analyst questions, chooses supported tools, and explains deterministic evidence. ISO 20022 business logic and bank-owned systems remain the authoritative source of truth. A proposed bank adapter would retrieve approved records using approved identities and access controls. **The current implementation does not access live banking systems or execute payments.**
+## Executive narrative
 
-## Why AI? Why MCP? Why not just REST?
-- **REST / deterministic rules:** the right architecture for fixed validation and processing workflows; a single API is enough if the job is only XML checking.
-- **AI:** valuable for variable investigation requests, selecting the next information need, joining evidence and uncertainty into an intelligible analyst response. The model is not itself a payment validation authority.
-- **MCP:** a standard tool discovery/invocation interface for multiple compatible AI clients; it does not make XML processing smarter or safer by itself.
-- **Differentiation:** exact cross-message correlation, citations to source fields, refusal to infer missing facts, explicit human-in-the-loop handling and measurable investigation quality.
+| Slide | Key question answered |
+| --- | --- |
+| 1. Vision | What is PEI, why build it, and what must it never do? |
+| 2. Traditional vs AI + MCP | Why AI? Why MCP instead of just a REST API? |
+| 3. Intelligent differentiation | What is implemented beyond basic XML validation? |
+| 4. **High-level target architecture** | Where are the AI client, governed access, deterministic core, bank-owned adapter and systems of record? |
+| 5. **Seven-layer guardrails** | How do identity, PII, prompt/data controls, authorization, provenance, human review and audit form a defense-in-depth design? |
+| 6. MCP tools | What six tools are actually implemented versus what requires bank integration? |
+| 7. Happy-path sequence | How does supplied pacs.008 + pacs.002 become evidence-backed explanation? |
+| 8. Core/legacy integration | How can bank adapters use REST/z/OS Connect, MQ, SOAP/ESB, batch or archives? |
+| 9. Risk & residual risk | Why is read-only safer but emphatically **not risk-free**? |
+| 10. Measurable value | How should PEI be compared with traditional/API-only investigation? |
+| 11. Investment decision | Which gates should precede a controlled bank pilot and operational scale? |
 
-## Slide index
-| # | Executive question | Slide content |
-|---|---|---|
-| 1 | What is PEI and why build it? | Business problem, unique capability and desired outcome |
-| 2 | Why AI and MCP over a single API? | Traditional API vs AI + direct APIs vs AI + MCP |
-| 3 | What architecture are we proposing? | AI, MCP, deterministic core and future bank-owned trust boundary |
-| 4 | Which actual and planned tools exist? | Six implemented tools vs proposed bank-connection tools |
-| 5 | What is the actual happy path? | Six-step sequence and synthetic pacs.008 / pacs.002 example |
-| 6 | How is it secured; what can go wrong? | Controls implemented today, future controls and residual risks |
-| 7 | How will we prove value? | Pilot scorecard, delivery gates and investment ask |
+## Current capabilities vs target
 
-## Implemented MCP tools (callable now)
-| Tool | Purpose |
-|---|---|
-| `parse_message` | Parse supplied pacs.008 / pacs.002 XML |
-| `validate_message` | Business-rule checks, security findings and optionally local XSD |
-| `investigate_payment` | Exact correlation and field-level evidence for supplied messages |
-| `lookup_code` | Explain known code values; unknown values remain unknown |
-| `explain_message` | Deterministic natural-language explanation |
-| `generate_test_message` | Create synthetic test messages |
+**Implemented in the Python repository:** local MCP stdio server; \`parse_message\`, \`validate_message\`, \`explain_message\`, \`lookup_code\`, \`generate_test_message\`, \`investigate_payment\`; deterministic parsing and exact pacs.008/pacs.002 correlation; curated code lookup, basic security flags and optional offline XSD validation. The payment-hub adapter interfaces exist but are **not** connected to live bank systems.
 
-**Not implemented:** `get_payment_evidence`, `get_payment_status`, `get_scheme_rules`, `check_duplicate_payment`, `simulate_repair`; bank authorization/gateway, production data redaction and live core-banking connection.
+**Target only:** OIDC/mTLS-secured enterprise MCP gateway, bank-owned read-only payment-hub/core adapters, PII tokenization and data governance, immutable operational audit, official XSD/scheme-rule governance, and human investigation workflows. **No payment-write tools are provided.**
 
-## Safety and risk
-The prototype is read-only, uses exact identifier correlation, marks untrusted free text and provides no automated payment mutations. This limits **execution risk only**; it does **not eliminate** wrong conclusions, model hallucination, data leakage, authorization failures, evolving scheme rules or operational failures. The executive slide distinguishes `TODAY`, `TARGET` and `GAP` controls. Real banking deployment needs security review and bank approval.
+Glama is optional MCP discovery and publishing, not part of payment processing or an essential runtime dependency.
 
-## What success would mean
-Evaluate mean/median investigation time, evidence coverage, expert-reviewed accuracy, unsupported statements, safety violations, case escalation quality and analyst acceptance against a documented baseline. **No production improvement has been demonstrated by the synthetic fixture benchmark.**
+## Naming and audience
 
-## Files
-- [Seven-slide editable executive deck](ISO20022_Payment_Intelligence_Executive_Overview.pptx)
-- [PowerPoint generator source](build_executive_slides.js)
-- [Full happy path](../ISO20022_MCP_Happy_Path_Complete_Flow.md)
-- [Solution architecture and legacy banking integration](../ISO20022_MCP_Solution_Architecture.md)
-- [Editable Mermaid sequences](../diagrams/)
+- **Platform / concept:** Payment Evidence Intelligence (**PEI**).
+- **Runtime component:** PEI ISO 20022 MCP Evidence Service.
+- **Business user experience:** Payment Operations Investigation Copilot.
+- **Bank integration:** PEI Read-Only Evidence Adapters (planned concrete implementations).
 
-## Build
-Requires Node.js 22+ and `pptxgenjs@4.0.0`:
+This is a positioning proposal, not a registered mark.
 
-```bash
+## Build the slide deck
+
+Requires Node.js and \`pptxgenjs\`:
+
+\`\`\`bash
 npm install --no-save pptxgenjs@4.0.0
-OUTPUT_PPTX=docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx node docs/executive/build_executive_slides.js
-```
+OUTPUT_PPTX=docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx \
+  node docs/executive/build_executive_slides.js
+\`\`\`
 
-The repository workflow builds, validates that the deck contains exactly seven slides and commits the generated PowerPoint. Slides are native editable PowerPoint shapes, not screenshots.
+The deck contains **11 editable slides**, not flattened images. The GitHub workflow in \`.github/workflows/build-executive-deck.yml\` builds and commits the regenerated PowerPoint.
 
-## Review status
-PR #2 is stacked on PR #1 (validation hardening). It should be reviewed and the base merged in dependency order. This deck describes both the current prototype and the proposed enterprise target state; do not represent future controls as deployed.
+## Supporting sources
+
+- [Executive architecture + guardrails](./ARCHITECTURE_AND_GUARDRAILS.md)
+- [High-level architecture Mermaid](../diagrams/pei_high_level_architecture.mmd)
+- [Guardrails & investigation sequence Mermaid](../diagrams/pei_guardrails_sequence.mmd)
+- [Complete synthetic happy path](../ISO20022_MCP_Happy_Path_Complete_Flow.md)
+- [Core/legacy integration architecture](../ISO20022_MCP_Solution_Architecture.md)
+
+**Investment hypothesis, not a claimed result:** PEI may reduce evidence gathering and improve consistency. Benchmark analyst time, evidence accuracy, incorrect assertions, privacy events and unsafe action rates using bank-approved cases before making ROI or safety claims.

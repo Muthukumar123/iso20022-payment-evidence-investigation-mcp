@@ -15,4 +15,5 @@ jobs:
       - run: pip install -e ".[dev]" pip-audit bandit
       - run: pytest -q
       - run: bandit -q -r src
-      - run: pip-audit --skip-editable
+      # Audit this project's own dependencies, not the runner's preinstalled tooling
+      - run: pip-audit .

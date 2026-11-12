@@ -1,6 +1,13 @@
 # PEI — Payment Evidence Intelligence | Executive Architecture
 
-This folder contains an **eleven-slide, fully editable PowerPoint presentation** for business sponsors, CIO/CTO, banking architects, risk and control stakeholders.
+This folder contains the final **eleven-slide, editable PowerPoint and matching PDF** for business sponsors, CIO/CTO, banking architects, risk and control stakeholders.
+
+**Final presentation files:**
+
+- [Executive PowerPoint (.pptx)](./ISO20022_Payment_Intelligence_Executive_Overview.pptx) — editable slide shapes and text.
+- [Executive PDF (.pdf)](./ISO20022_Payment_Intelligence_Executive_Overview.pdf) — distribution-ready fixed-layout version (11 pages).
+
+The PowerPoint and PDF are generated from the same source so their content and slide order remain aligned.
 
 **Product statement:** *From rejection codes to defensible decisions.* Build a read-only, evidence-first, AI-assisted investigation capability for ISO 20022 payment exceptions—not another XML validation API and not an autonomous payment executor.
 
@@ -47,7 +54,7 @@ OUTPUT_PPTX=docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx
   node docs/executive/build_executive_slides.js
 \`\`\`
 
-The deck contains **11 editable slides**, not flattened images. The GitHub workflow in \`.github/workflows/build-executive-deck.yml\` builds and commits the regenerated PowerPoint.
+The deck contains **11 editable slides**, not flattened images. The GitHub workflow in \`.github/workflows/build-executive-deck.yml\` builds and commits both the PowerPoint and a matching PDF via LibreOffice. Do not edit either generated binary manually; update the JavaScript source and rerun the workflow.
 
 ## Supporting sources
 

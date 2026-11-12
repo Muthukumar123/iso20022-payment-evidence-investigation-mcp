@@ -1,0 +1,18 @@
+sequenceDiagram
+ autonumber
+ actor Analyst
+ participant Agent as AI Agent
+ participant Policy as Authorization Policy
+ participant Simulator as Repair Simulator (proposed)
+ participant Rules as Approved Scheme Rules
+ participant Hub as Payment Hub
+ Analyst->>Agent: Would a corrected IBAN resolve the issue?
+ Agent->>Policy: Check simulation entitlement
+ Policy-->>Agent: Simulation-only approval
+ Agent->>Simulator: Preview proposed change on a copy
+ Simulator->>Rules: Validate before / after
+ Rules-->>Simulator: Versioned diagnostics
+ Simulator-->>Agent: Changes and limitations
+ Agent-->>Analyst: Recommendation only, not executed
+ Note over Agent,Hub: Payment remains unchanged
+ Analyst->>Hub: Separate bank-governed approval path

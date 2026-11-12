@@ -37,7 +37,9 @@ class PaymentInspectionService:
         self._authorizer = authorizer
 
     def inspect(self, *, principal: str, payment_reference: str) -> dict:
-        if not principal or not PAYMENT_REFERENCE.fullmatch(payment_reference):
+        if (not isinstance(principal, str) or not principal or
+                not isinstance(payment_reference, str) or
+                not PAYMENT_REFERENCE.fullmatch(payment_reference)):
             raise ValueError("Authenticated principal and valid payment reference required.")
         if not self._authorizer.may_read(principal, payment_reference):
             raise PermissionError("Payment message access denied.")

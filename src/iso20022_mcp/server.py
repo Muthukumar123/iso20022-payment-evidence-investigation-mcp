@@ -1,5 +1,4 @@
 """MCP server exposing the ISO 20022 tools. Run: iso20022-mcp  (stdio transport)."""
-import json
 from mcp.server.mcpserver import MCPServer
 from . import parser, validate, explain, codes, generate
 
@@ -10,19 +9,19 @@ mcp = MCPServer("iso20022", instructions=UNTRUSTED_NOTE)
 
 
 @mcp.tool()
-def parse_message(xml: str) -> str:
+def parse_message(xml: str) -> dict:
     """Parse an ISO 20022 pacs.008 (credit transfer) or pacs.002 (status report) XML message into structured JSON."""
     try:
-        return json.dumps({"note": UNTRUSTED_NOTE, "message": parser.parse_message(xml)}, indent=2)
+        return {"note": UNTRUSTED_NOTE, "message": parser.parse_message(xml)}
     except parser.ParseError as e:
-        return json.dumps({"error": str(e)})
+        return {"error": str(e)}
 
 
 @mcp.tool()
-def validate_message(xml: str) -> str:
+def validate_message(xml: str) -> dict:
     """Validate a pacs.008/pacs.002 message against business rules (IBAN checksum, BIC format, amounts,
     required parties, counts, free-text limits, prompt-injection patterns). Returns issues with likely reject codes."""
-    return json.dumps(validate.validate_message(xml), indent=2)
+    return validate.validate_message(xml)
 
 
 @mcp.tool()
@@ -35,9 +34,9 @@ def explain_message(xml: str) -> str:
 
 
 @mcp.tool()
-def lookup_code(code: str) -> str:
+def lookup_code(code: str) -> dict:
     """Look up an ISO 20022 status reason, transaction status or charge bearer code. Use this instead of guessing."""
-    return json.dumps(codes.lookup_code(code), indent=2)
+    return codes.lookup_code(code)
 
 
 @mcp.tool()
@@ -45,9 +44,14 @@ def generate_test_message(kind: str = "pacs.008", defect: str = "none", reason_c
     """Generate a synthetic test message. kind: 'pacs.008' or 'pacs.002'.
     defect (pacs.008): none, bad_iban, bad_bic, missing_creditor_name, bad_decimals, count_mismatch,
     injection_in_remittance, missing_creditor_address. reason_code is used for pacs.002."""
+    if kind not in ("pacs.008", "pacs.002"):
+        return "Error: kind must be pacs.008 or pacs.002."
     if kind == "pacs.002":
         return generate.generate_pacs002(reason_code)
-    return generate.generate_pacs008(defect)
+    try:
+        return generate.generate_pacs008(defect)
+    except ValueError as exc:
+        return f"Error: {exc}"
 
 
 def main():

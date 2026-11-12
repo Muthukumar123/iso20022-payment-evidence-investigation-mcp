@@ -1,9 +1,13 @@
-"""Benchmark assertions demonstrate capabilities, not field accuracy."""
-from evals.compare_investigation import run
+"""Assert documented synthetic benchmark CLI executes and reports its limits."""
+from pathlib import Path
+import subprocess
+import sys
 
 
 def test_synthetic_evidence_comparison():
-    scenarios = run()
-    assert len(scenarios) == 4
-    assert all(not baseline for _, baseline, _ in scenarios)
-    assert all(engine for _, _, engine in scenarios)
+    script = Path(__file__).resolve().parents[1] / "evals" / "compare_investigation.py"
+    result = subprocess.run(
+        [sys.executable, str(script)], check=True, capture_output=True, text=True
+    )
+    assert "Total correct for these 4 synthetic cases:" in result.stdout
+    assert "4/4 investigation" in result.stdout

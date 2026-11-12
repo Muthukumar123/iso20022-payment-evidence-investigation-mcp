@@ -1,59 +1,63 @@
-# ISO 20022 Payment Intelligence — Executive Overview
+# Payment Evidence Intelligence (PEI) — Executive Architecture
 
-This folder contains a **two-slide, editable PowerPoint deck** designed for an executive or banking architecture review. It explains **what we are building, why it matters, which MCP tools are involved, and the end-to-end request sequence**.
+**Working platform name:** Payment Evidence Intelligence (PEI). Subject to legal/trademark review before external branding.
 
-## Executive message
+This directory contains an **editable seven-slide PowerPoint** for executive sponsors, payment operations, risk officers and enterprise architects.
 
-**We are not building another XML parser.** We are building an **evidence-backed, read-only payment investigation capability** that correlates an original ISO 20022 `pacs.008` with a bank-reported `pacs.002` status message and explains confirmed facts, uncertainties and human-reviewed next actions.
+## What we are building
+An **evidence-first, AI-assisted payment exception investigation platform**. A governed AI agent interprets analyst questions, chooses supported tools, and explains deterministic evidence. ISO 20022 business logic and bank-owned systems remain the authoritative source of truth. A proposed bank adapter would retrieve approved records using approved identities and access controls. **The current implementation does not access live banking systems or execute payments.**
 
-The opportunity is reduced manual investigation, traceable outcomes, and an AI-facing tool contract reusable across compatible clients. This is a product objective, **not a proven production KPI**.
+## Why AI? Why MCP? Why not just REST?
+- **REST / deterministic rules:** the right architecture for fixed validation and processing workflows; a single API is enough if the job is only XML checking.
+- **AI:** valuable for variable investigation requests, selecting the next information need, joining evidence and uncertainty into an intelligible analyst response. The model is not itself a payment validation authority.
+- **MCP:** a standard tool discovery/invocation interface for multiple compatible AI clients; it does not make XML processing smarter or safer by itself.
+- **Differentiation:** exact cross-message correlation, citations to source fields, refusal to infer missing facts, explicit human-in-the-loop handling and measurable investigation quality.
 
-## Slides
+## Slide index
+| # | Executive question | Slide content |
+|---|---|---|
+| 1 | What is PEI and why build it? | Business problem, unique capability and desired outcome |
+| 2 | Why AI and MCP over a single API? | Traditional API vs AI + direct APIs vs AI + MCP |
+| 3 | What architecture are we proposing? | AI, MCP, deterministic core and future bank-owned trust boundary |
+| 4 | Which actual and planned tools exist? | Six implemented tools vs proposed bank-connection tools |
+| 5 | What is the actual happy path? | Six-step sequence and synthetic pacs.008 / pacs.002 example |
+| 6 | How is it secured; what can go wrong? | Controls implemented today, future controls and residual risks |
+| 7 | How will we prove value? | Pilot scorecard, delivery gates and investment ask |
 
-| Slide | Core message | Diagram |
-| --- | --- | --- |
-| 1 — Strategy | Commodity validation versus evidence-backed payment investigation; objective and value | Ask → Retrieve* → Prove → Explain → Review |
-| 2 — Architecture and interaction | AI orchestrates MCP tools; deterministic code correlates source evidence; bank adapters are proposed | Analyst → Agent → MCP → Evidence engine → evidence-backed answer, with future bank-adapter boundary |
+## Implemented MCP tools (callable now)
+| Tool | Purpose |
+|---|---|
+| `parse_message` | Parse supplied pacs.008 / pacs.002 XML |
+| `validate_message` | Business-rule checks, security findings and optionally local XSD |
+| `investigate_payment` | Exact correlation and field-level evidence for supplied messages |
+| `lookup_code` | Explain known code values; unknown values remain unknown |
+| `explain_message` | Deterministic natural-language explanation |
+| `generate_test_message` | Create synthetic test messages |
 
-### MCP tools shown
+**Not implemented:** `get_payment_evidence`, `get_payment_status`, `get_scheme_rules`, `check_duplicate_payment`, `simulate_repair`; bank authorization/gateway, production data redaction and live core-banking connection.
 
-- `parse_message` — Extract payment/status fields from supported XML.
-- `validate_message` — Business rules plus optional XSD and security assessments.
-- `investigate_payment` — Exact `pacs.008`/`pacs.002` correlation with field-level evidence.
-- `lookup_code` — Meaning of known status/rejection codes; never invent unknown meanings.
-- `explain_message` — Deterministic plain-language rendering.
-- `generate_test_message` — Synthetic test fixtures.
+## Safety and risk
+The prototype is read-only, uses exact identifier correlation, marks untrusted free text and provides no automated payment mutations. This limits **execution risk only**; it does **not eliminate** wrong conclusions, model hallucination, data leakage, authorization failures, evolving scheme rules or operational failures. The executive slide distinguishes `TODAY`, `TARGET` and `GAP` controls. Real banking deployment needs security review and bank approval.
 
-`get_payment_evidence` is **illustrative / proposed**, not an implemented MCP tool. Its future implementation requires a bank-operated adapter and authorization policies for payment hub, z/OS Connect/REST, SOAP, MQ, or batch sources.
+## What success would mean
+Evaluate mean/median investigation time, evidence coverage, expert-reviewed accuracy, unsupported statements, safety violations, case escalation quality and analyst acceptance against a documented baseline. **No production improvement has been demonstrated by the synthetic fixture benchmark.**
 
-## Actual implemented happy path
+## Files
+- [Seven-slide editable executive deck](ISO20022_Payment_Intelligence_Executive_Overview.pptx)
+- [PowerPoint generator source](build_executive_slides.js)
+- [Full happy path](../ISO20022_MCP_Happy_Path_Complete_Flow.md)
+- [Solution architecture and legacy banking integration](../ISO20022_MCP_Solution_Architecture.md)
+- [Editable Mermaid sequences](../diagrams/)
 
-1. The analyst provides *synthetic* `pacs.008` and matching `pacs.002` XML.
-2. The AI client's MCP session initializes, discovers tools (`tools/list`) and calls validation and investigation tools.
-3. The deterministic investigation engine correlates the original message ID and exact transaction IDs, then interprets bank-reported status and known reason codes.
-4. The MCP tool returns the status and evidence paths with uncertainty, restrictions and safe human-review recommendations.
-5. The analyst receives an evidence-backed explanation. No payment modification occurs.
-
-For a detailed, reproducible example, see [`../ISO20022_MCP_Happy_Path_Complete_Flow.md`](../ISO20022_MCP_Happy_Path_Complete_Flow.md).
-
-## Planned connected banking path
-
-`Analyst → AI agent → governed MCP gateway → authenticated read-only bank adapter → payment hub/legacy archive → pacs.008 + pacs.002 → investigate_payment → evidence + human review`
-
-No production bank connection, external scheme-rule validation, payment resubmission or repair execution is included in the current repository.
-
-## Regenerate the PPTX
-
-Requires Node.js 20+ and PptxGenJS 4.0.0:
+## Build
+Requires Node.js 22+ and `pptxgenjs@4.0.0`:
 
 ```bash
 npm install --no-save pptxgenjs@4.0.0
-OUTPUT_PPTX=docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx \
-  node docs/executive/build_executive_slides.js
+OUTPUT_PPTX=docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx node docs/executive/build_executive_slides.js
 ```
 
-The PowerPoint uses native editable shapes, text and connectors rather than flattened slide images.
+The repository workflow builds, validates that the deck contains exactly seven slides and commits the generated PowerPoint. Slides are native editable PowerPoint shapes, not screenshots.
 
-## Supporting architecture and diagrams
-
-See [`../ISO20022_MCP_Solution_Architecture.md`](../ISO20022_MCP_Solution_Architecture.md) and [`../diagrams/`](../diagrams/) for detailed REST, z/OS Connect, SOAP, IBM MQ and human-controlled investigation sequences.
+## Review status
+PR #2 is stacked on PR #1 (validation hardening). It should be reviewed and the base merged in dependency order. This deck describes both the current prototype and the proposed enterprise target state; do not represent future controls as deployed.

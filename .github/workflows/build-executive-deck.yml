@@ -38,8 +38,9 @@ jobs:
               files = set(z.namelist())
               assert "ppt/slides/slide1.xml" in files
               assert "ppt/slides/slide2.xml" in files
-              assert "ppt/slides/slide3.xml" not in files
-          print(f"Validated two-slide PPTX ({target.stat().st_size} bytes)")
+              assert "ppt/slides/slide7.xml" in files
+              assert "ppt/slides/slide8.xml" not in files
+          print(f"Validated seven-slide PPTX ({target.stat().st_size} bytes)")
           PY
       - name: Commit deck to source branch
         env:
@@ -52,5 +53,5 @@ jobs:
             echo "Executive PPTX unchanged"
             exit 0
           fi
-          git commit -m "docs: build two-slide executive PowerPoint"
+          git commit -m "docs: build seven-slide executive PowerPoint"
           git push origin "HEAD:$BRANCH"

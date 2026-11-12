@@ -73,7 +73,7 @@ def validate_message(xml: str) -> dict:
         issues.append(_issue("error", "GrpHdr/NbOfTxs", "Transaction count missing."))
     elif m["declared_tx_count"] is not None:
         count = m["declared_tx_count"]
-        if not re.fullmatch(r"[0-9]+", count) or int(count) <= 0:
+        if not re.fullmatch(r"[0-9]+", count) or len(count) > 9 or int(count) <= 0:
             issues.append(_issue("error", "GrpHdr/NbOfTxs", "Transaction count must be positive."))
         elif int(count) != m["actual_tx_count"]:
             issues.append(_issue("error", "GrpHdr/NbOfTxs",

@@ -1,0 +1,17 @@
+sequenceDiagram
+ autonumber
+ participant Agent as AI / MCP Client
+ participant Gateway as Enterprise MCP Gateway
+ participant Adapter as Read-only Bank Adapter
+ participant API as API Gateway / z/OS Connect
+ participant Core as CICS / IMS / Db2
+ Agent->>Gateway: get_payment(REF123)
+ Gateway->>Gateway: Authorize delegated identity and scope
+ Gateway->>Adapter: find_payment(REF123, principal)
+ Adapter->>API: HTTPS query (token and mTLS)
+ API->>Core: Map to approved read-only service
+ Core-->>API: Payment status and source identifiers
+ API-->>Adapter: JSON + source timestamp
+ Adapter->>Adapter: Normalize and redact
+ Adapter-->>Gateway: Canonical record + provenance
+ Gateway-->>Agent: Scoped tool result

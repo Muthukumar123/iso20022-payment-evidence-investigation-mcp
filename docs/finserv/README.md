@@ -45,11 +45,11 @@ The LLM is an **untrusted planner and communicator**, never a system of record. 
 
 Create preview JSON without credentials:
 
-\`\`\`bash
+```bash
 python scripts/publish_gamma.py --dry-run
-\`\`\`
+```
 
-To generate a Gamma-hosted deck, configure \`GAMMA_API_KEY\` as a secret and run the **Publish FEI executive narrative to Gamma** manual GitHub Actions workflow, or run the script locally with \`--publish\`. API generation consumes Gamma credits. The workflow is manual by design and will not send real payment data. Deployment is **not complete** until Gamma returns an actual \`gammaUrl\`.
+To generate a Gamma-hosted deck, configure `GAMMA_API_KEY` as a secret and run the **Publish FEI executive narrative to Gamma** manual GitHub Actions workflow, or run the script locally with `--publish`. API generation consumes Gamma credits. The workflow is manual by design and will not send real payment data. Deployment is **not complete** until Gamma returns an actual `gammaUrl`.
 
 ## MVP acceptance criteria
 

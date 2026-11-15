@@ -36,6 +36,18 @@ and hosting provider. Neither is part of the bank's payment execution path.
 | `generate_test_message` | Synthetic valid and defective messages for testing (no real customer data) |
 | `investigate_payment` | Exactly correlate a supplied pacs.008 and pacs.002; return bank-reported rejection evidence, limits and human-reviewed next steps |
 
+## Glama source discovery and reproducibility
+
+The current server exposes **six MCP tools**, including `investigate_payment`. The integration test checks a real stdio `initialize`, asserts **exactly six** results from `tools/list`, and calls the investigation tool with synthetic messages.
+
+```bash
+pip install -e ".[dev]"
+pytest -q tests/test_mcp_integration.py
+docker build -t iso20022-evidence-mcp .
+```
+
+The Dockerfile supports reproducible, least-privilege source introspection (including Glama's sandbox builds). It has no network listener or banking credentials. If the Glama listing still displays the previous repository name or five tools, follow the [Glama rescan and ownership guidance](docs/GLAMA_LISTING.md).
+
 ## Architecture and complete happy-path walkthrough
 
 - [Documentation index](docs/README.md)

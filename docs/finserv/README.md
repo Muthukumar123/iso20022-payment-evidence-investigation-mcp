@@ -41,7 +41,7 @@ The LLM is an **untrusted planner and communicator**, never a system of record. 
 
 ## Gamma AI executive deck
 
-[Gamma-ready 10-card narrative](./GAMMA_EXECUTIVE_DECK.md) is *synthetic and non-confidential*. Gamma (gamma.app) is a **presentation publishing service**, not the runtime hosting platform for the FEI MCP service.
+[Gamma-ready 11-card narrative](./GAMMA_EXECUTIVE_DECK.md) is *synthetic and non-confidential*. Gamma (gamma.app) is a **presentation publishing service**, not the runtime hosting platform for the FEI MCP service.
 
 Create preview JSON without credentials:
 

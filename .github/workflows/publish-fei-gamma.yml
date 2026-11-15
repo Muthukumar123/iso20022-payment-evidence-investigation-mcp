@@ -1,0 +1,42 @@
+name: Publish FEI executive narrative to Gamma
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "dry-run validates locally; publish sends reviewed synthetic deck to Gamma"
+        required: true
+        type: choice
+        options:
+          - dry-run
+          - publish
+        default: dry-run
+
+permissions:
+  contents: read
+
+jobs:
+  publish-gamma:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - name: Checkout reviewed FEI content
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline content validation
+        run: python scripts/publish_gamma.py --dry-run
+      - name: Publish to Gamma (manual)
+        if: inputs.action == 'publish'
+        env:
+          GAMMA_API_KEY: ${{ secrets.GAMMA_API_KEY }}
+        run: |
+          if [ -z "$GAMMA_API_KEY" ]; then
+            echo "GAMMA_API_KEY must be set as a repository Actions secret."
+            exit 1
+          fi
+          python scripts/publish_gamma.py --publish --confirm-external-generation
+
+# Third-party transfer is intentional; never use bank data, payment XML or PII.

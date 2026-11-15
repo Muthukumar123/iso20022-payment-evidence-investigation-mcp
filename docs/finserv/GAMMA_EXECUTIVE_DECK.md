@@ -37,20 +37,20 @@ Evidence-first, AI-assisted payment investigations — executive concept and con
 
 ---
 # Six actual MCP tools — clear evidence boundaries
-- \`parse_message(xml)\`: structured pacs.008 / pacs.002.
-- \`validate_message(xml)\`: local rules, optional local XSD, security flags.
-- \`investigate_payment(pacs008_xml,pacs002_xml)\`: exact correlation and cited bank-reported status.
-- \`lookup_code(code)\`: explain known codes, unknown remains unknown.
-- \`explain_message(xml)\`: deterministic explanation.
-- \`generate_test_message(kind, defect)\`: synthetic fixtures.
-**Future tools, not implemented:** \`get_payment_evidence\`, \`get_payment_timeline\`, \`get_scheme_rule\`.
+- `parse_message(xml)`: structured pacs.008 / pacs.002.
+- `validate_message(xml)`: local rules, optional local XSD, security flags.
+- `investigate_payment(pacs008_xml,pacs002_xml)`: exact correlation and cited bank-reported status.
+- `lookup_code(code)`: explain known codes, unknown remains unknown.
+- `explain_message(xml)`: deterministic explanation.
+- `generate_test_message(kind, defect)`: synthetic fixtures.
+**Future tools, not implemented:** `get_payment_evidence`, `get_payment_timeline`, `get_scheme_rule`.
 
 ---
 # End-to-end happy path — a defensible answer
 Analyst: "Why did PAY123 fail?"
 1. Proposed bank adapter retrieves authorized pacs.008 and pacs.002 with source IDs.
 2. MCP validates XML; investigation engine checks original message ID + exact transaction IDs.
-3. Bank status \`RJCT\` and reported reason \`AC04\` are extracted with source paths.
+3. Bank status `RJCT` and reported reason `AC04` are extracted with source paths.
 4. AI explains: "Bank reports closed account; this is not independent account verification."
 5. Analyst reviews action; **no automatic retry or settlement**.
 Today the same deterministic step works locally on **supplied synthetic XML** only.

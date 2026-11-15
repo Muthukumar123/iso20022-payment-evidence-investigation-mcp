@@ -14,7 +14,7 @@
 | --- | --- |
 | Two-message synthetic demo | Exact pacs.008 ↔ pacs.002 correlation; evidence shows original message, transaction IDs, status and reason |
 | Deterministic validation | Fails safely on malformed XML, unsupported version, invalid IDs, and missing local schema |
-| Agent + MCP orchestration demo | MCP \`tools/list\`, validation, investigation, code lookup produce a complete attributed analyst answer |
+| Agent + MCP orchestration demo | MCP `tools/list`, validation, investigation, code lookup produce a complete attributed analyst answer |
 | Test-driven guardrails | No invented codes; unknown and mismatch cases clearly marked; malicious remittance never controls tool use |
 | Baseline measurement | Same 20–50 curated scenarios run manual/API-only/agent-assisted; report evidence precision and unsafe claims |
 
@@ -22,7 +22,7 @@
 
 - Select one bank-owned **read-only** payment hub or archive interface.
 - Implement identity propagation, ABAC, field minimization, masked immutable audit.
-- Add \`get_payment_evidence\` and \`get_payment_timeline\` only after authorized adapter exists.
+- Add `get_payment_evidence` and `get_payment_timeline` only after authorized adapter exists.
 - Explicitly label freshness and contradictory status sources.
 
 ## Phase 3 — event intelligence, conditional

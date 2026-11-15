@@ -1,0 +1,25 @@
+sequenceDiagram
+  autonumber
+  actor Analyst as Payment Operations Analyst
+  participant AI as AI Copilot
+  participant GW as Governed MCP Gateway (target)
+  participant Adapter as Bank Read-only Adapter (target)
+  participant Hub as Payment Hub / Archive
+  participant MCP as FEI MCP Tool Server
+  participant Core as Deterministic Evidence Engine
+  Analyst->>AI: Why was payment REF123 rejected?
+  AI->>GW: get_payment_evidence(REF123) [proposed]
+  GW->>GW: Authenticate + authorize + audit + scope
+  GW->>Adapter: Authorized minimum-data query
+  Adapter->>Hub: Read original and status message
+  Hub-->>Adapter: pacs.008 + pacs.002 with source IDs
+  Adapter-->>AI: Authorized / minimized evidence
+  AI->>MCP: validate_message(original)
+  MCP->>Core: Deterministic validation
+  Core-->>MCP: Business/schema/security findings
+  AI->>MCP: investigate_payment(original,status)
+  MCP->>Core: Correlate OrgnlMsgId and transaction IDs
+  Core-->>MCP: Matched or unknown, codes, cited XML paths
+  MCP-->>AI: Read-only evidence, uncertainty, human review
+  AI-->>Analyst: Explain bank-reported facts; no automatic retry
+  Note over AI,Core: Currently working locally with supplied XML; bank access is future scope

@@ -13,7 +13,7 @@ Data can come from an authorized live read or a maintained evidence store fed by
 | Portal / Copilot | User authentication, natural-language question, display evidence and uncertainty | Payment authorization |
 | AI planner | Tool selection, bounded investigation, evidence summarization | Generate transaction state, override deterministic findings |
 | MCP gateway | AuthN/AuthZ, tool allowlists, rate/size limits, trace IDs, audit | Business rules, bank credentials in model context |
-| MCP tool surface | \`investigate_payment\`, \`validate_message\`, \`lookup_code\`, etc. | New source of record |
+| MCP tool surface | `investigate_payment`, `validate_message`, `lookup_code`, etc. | New source of record |
 | Deterministic core | ISO 20022 parsing, correlation, scheme/version rules, provenance | Autonomous account-status assertion |
 | Read-only bank adapters | Bank-policy enforcement, minimum-data retrieval and normalized envelope | Direct unrestricted LLM access |
 | Evidence store (future) | Event timeline, retention, lineage, freshness labels, idempotent replay | Replace authoritative core banking state |
@@ -31,10 +31,10 @@ Data can come from an authorized live read or a maintained evidence store fed by
 
 ## Suggested read-only future tools
 
-- \`get_payment_evidence(payment_ref)\`: authorized minimum fields and source identifiers.
-- \`get_payment_timeline(payment_ref)\`: lifecycle events and last-updated stamps.
-- \`get_payment_status(payment_ref)\`: authoritative current status, not inferred state.
-- \`get_scheme_rule(message_type, effective_date)\`: versioned, bank-approved rule references.
+- `get_payment_evidence(payment_ref)`: authorized minimum fields and source identifiers.
+- `get_payment_timeline(payment_ref)`: lifecycle events and last-updated stamps.
+- `get_payment_status(payment_ref)`: authoritative current status, not inferred state.
+- `get_scheme_rule(message_type, effective_date)`: versioned, bank-approved rule references.
 
 These are **not** current tools. A real system must authenticate users and enforce policy in adapters independently of model prompts.
 

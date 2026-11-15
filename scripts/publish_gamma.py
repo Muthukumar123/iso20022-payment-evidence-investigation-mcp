@@ -22,13 +22,13 @@ def build_payload() -> dict:
     if len(raw) > 70_000:
         raise ValueError("Reviewed Gamma source is too large.")
     narrative = raw.decode("utf-8")
-    if narrative.count("\n---\n") != 9:
-        raise ValueError("Expected exactly ten Gamma cards.")
+    if narrative.count("\n---\n") != 10:
+        raise ValueError("Expected exactly eleven Gamma cards.")
     return {
         "inputText": narrative,
         "textMode": "preserve",
         "format": "presentation",
-        "numCards": 10,
+        "numCards": 11,
         "cardSplit": "inputTextBreaks",
         "imageOptions": {"source": "noImages"},
         "cardOptions": {"dimensions": "16x9"},
@@ -106,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             spec = build_payload()
             result = {
-                "mode": "offline-dry-run", "cards": 10,
+                "mode": "offline-dry-run", "cards": 11,
                 "source": str(SOURCE.relative_to(ROOT)),
                 "content_characters": len(spec["inputText"]),
                 "externalAccess": spec["sharingOptions"]["externalAccess"],

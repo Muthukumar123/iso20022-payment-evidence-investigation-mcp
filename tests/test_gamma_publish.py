@@ -18,11 +18,11 @@ def invoke(*args):
     )
 
 
-def test_dry_run_builds_private_ten_card_payload():
+def test_dry_run_builds_private_eleven_card_payload():
     result = invoke("--dry-run")
     assert result.returncode == 0, result.stderr
     metadata = json.loads(result.stdout)
-    assert metadata["cards"] == 10
+    assert metadata["cards"] == 11
     assert metadata["mode"] == "offline-dry-run"
     assert metadata["externalAccess"] == "noAccess"
 
@@ -45,9 +45,9 @@ def test_publish_requires_secret_before_any_http():
     assert "GAMMA_API_KEY is missing" in result.stderr
 
 
-def test_presentation_contains_exactly_ten_synthetic_cards():
+def test_presentation_contains_exactly_eleven_synthetic_cards():
     source = ROOT / "docs/finserv/GAMMA_EXECUTIVE_DECK.md"
     contents = source.read_text(encoding="utf-8")
-    assert contents.count("\n---\n") == 9
+    assert contents.count("\n---\n") == 10
     assert "No autonomous retry" in contents
     assert "No direct AI-to-core banking connectivity" in contents

@@ -1,6 +1,8 @@
-# iso20022-mcp
+# ISO 20022 Payment Evidence & Investigation MCP
 
-An MCP server that lets AI agents **parse, validate, explain and test ISO 20022 payment messages** — safely.
+**Python MCP server for read-only ISO 20022 payment validation and evidence-backed rejection investigation.** Correlates `pacs.008` and `pacs.002` messages using exact identifiers, provides traceable bank-reported status/rejection reasons, and supplies deterministic tools for safe AI-assisted payment analysis.
+
+**Repository/package:** `iso20022-mcp` · **Glama listing:** [recommended display name and description](docs/GLAMA_LISTING.md) · **Deployment:** local `stdio` server; no live bank integration or remote hosting.
 
 Agents handling payments fail in predictable ways: they invent reject codes, miss IBAN checksum errors, and
 follow instructions hidden in free-text fields like remittance information. This server gives them

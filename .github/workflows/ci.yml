@@ -17,3 +17,15 @@ jobs:
       - run: bandit -q -r src
       # Audit this project's own dependencies, not the runner's preinstalled tooling
       - run: pip-audit .
+
+  glama-container:
+    name: Reproducible stdio MCP container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build same container Glama can introspect
+        run: docker build --tag iso20022-evidence-mcp:ci .
+      - name: Confirm installed server imports without bank credentials
+        run: |
+          docker run --rm --entrypoint python iso20022-evidence-mcp:ci \
+            -c "from iso20022_mcp.server import mcp; print('MCP server import succeeded')"

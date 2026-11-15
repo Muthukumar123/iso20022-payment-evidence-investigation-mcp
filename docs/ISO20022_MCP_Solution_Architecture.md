@@ -1,7 +1,7 @@
 # ISO 20022 Payment Investigation MCP — Solution Architecture & Legacy Integration
 
 **Architecture baseline:** 12 November 2026  
-**Repository:** https://github.com/Muthukumar123/iso20022-mcp  
+**Repository:** https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp  
 **Implementation:** PR #1 hardening; PR #2 evidence-based investigation (stacked; pending review/merge).  
 **Classification:** Reference solution and synthetic proof of concept; not a production banking installation.
 
@@ -238,9 +238,9 @@ GitHub provides source, PR review, release tags, CI/CD and software supply-chain
 
 ## 14. References
 
-- GitHub source: https://github.com/Muthukumar123/iso20022-mcp
-- Hardening PR #1: https://github.com/Muthukumar123/iso20022-mcp/pull/1
-- Evidence investigation PR #2: https://github.com/Muthukumar123/iso20022-mcp/pull/2
+- GitHub source: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp
+- Hardening PR #1: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/1
+- Evidence investigation PR #2: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/2
 - MCP Streamable HTTP specification (2026-07-28): https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2026-07-28/basic/transports/streamable-http.mdx
 - IBM z/OS Connect API providers: https://www.ibm.com/docs/en/zos-connect/3.0.0?topic=connect-what-are-zos-api-providers
 - IBM z/OS Connect overview: https://www.ibm.com/docs/en/zos-connect/3.0.0?topic=overview-what-is-zos-connect

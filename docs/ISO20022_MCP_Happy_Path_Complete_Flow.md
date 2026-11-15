@@ -1,6 +1,6 @@
 # ISO 20022 Payment Intelligence — Complete Happy-Path Walkthrough
 
-**Version:** 1.0 · **Date:** 12 November 2026 · **Repository:** https://github.com/Muthukumar123/iso20022-mcp
+**Version:** 1.0 · **Date:** 12 November 2026 · **Repository:** https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp
 
 **Status:** Runnable read-only local demonstration on PR #2 (built on PR #1); proposed bank integration is separately identified. All identifiers and data below are synthetic. Nothing in the example initiates, repairs, or resubmits a payment.
 
@@ -49,7 +49,7 @@ MCP client config (replace the path with your installed executable):
 {
   "mcpServers": {
     "iso20022": {
-      "command": "/absolute/path/to/iso20022-mcp/.venv/bin/iso20022-mcp"
+      "command": "/absolute/path/to/iso20022-payment-evidence-investigation-mcp/.venv/bin/iso20022-mcp"
     }
   }
 }
@@ -364,9 +364,9 @@ The four-scenario synthetic comparison demonstrates **capability** (known AC04, 
 
 ## 9. Repository and reference links
 
-- Repository: https://github.com/Muthukumar123/iso20022-mcp
-- Hardening PR #1: https://github.com/Muthukumar123/iso20022-mcp/pull/1
-- Evidence-investigation PR #2: https://github.com/Muthukumar123/iso20022-mcp/pull/2
+- Repository: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp
+- Hardening PR #1: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/1
+- Evidence-investigation PR #2: https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/2
 - Architecture source: `docs/ISO20022_MCP_Solution_Architecture.md`
 - Sequence diagrams: `docs/diagrams/`
 

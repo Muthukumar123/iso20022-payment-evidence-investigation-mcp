@@ -31,7 +31,7 @@ Payment-operations analysts investigate failures by moving among payment hubs, c
 | Validation | Local curated rules; optional locally supplied XSD | Official scheme-rules governance, effective-date reference data |
 | Operations | Synthetic tests and CI | Production SLOs, DR, monitoring, human workflow and approval gates |
 
-The earlier work is in stacked PRs [#1](https://github.com/Muthukumar123/iso20022-mcp/pull/1) and [#2](https://github.com/Muthukumar123/iso20022-mcp/pull/2), **not automatically merged into main**.
+The earlier work originated in PRs [#1](https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/1), [#2](https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/2) and [#3](https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/3); **all three were merged into `main` on 15 November 2026**. The implementation remains a controlled prototype, without live-bank access.
 
 ## Architecture and guardrails
 

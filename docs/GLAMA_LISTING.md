@@ -1,6 +1,6 @@
 # Glama MCP server listing — maintainer-approved copy
 
-**Status:** The GitHub repository is public and Glama has previously indexed its source listing. The recommended display name and description are not confirmed live on Glama until the maintainer claims the listing and saves them.
+**Status:** The GitHub repository is public and was renamed to `iso20022-payment-evidence-investigation-mcp` on 15 November 2026. Glama previously indexed the repository under its former name, `iso20022-mcp`. The requested display name and updated URL are **not confirmed live** on Glama; the maintainer must review the existing listing and save the updates.
 
 ## Listing fields
 
@@ -8,7 +8,7 @@
 | --- | --- |
 | Display name | **ISO 20022 Payment Evidence & Investigation MCP** |
 | Short name | Payment Evidence MCP |
-| GitHub repository | https://github.com/Muthukumar123/iso20022-mcp |
+| GitHub repository | https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp |
 | Categories | Finance; Payments & Billing |
 | Implementation | Python MCP server (local stdio) |
 | License | MIT |
@@ -24,10 +24,10 @@
 ## Maintainer steps to change the Glama listing
 
 1. Sign in at https://glama.ai with the GitHub account `Muthukumar123`.
-2. Find the existing `iso20022-mcp` listing (avoid creating a duplicate).
+2. Search Glama for both `iso20022-mcp` (previous repository name) and `iso20022-payment-evidence-investigation-mcp` (new name). Open the listing associated with GitHub user `Muthukumar123`; avoid creating a duplicate.
 3. Choose **Claim ownership**, if necessary, and use GitHub verification. The root `glama.json` already specifies `Muthukumar123` as a maintainer.
-4. Open the listing's **Admin/Manage** settings and paste the display name and description above.
-5. Save, then open the listing as a signed-out visitor to verify the public title and description.
+4. Open the listing's **Manage/Edit** settings, update its GitHub repository URL to the new URL above (if editable), and paste the display name and description above.
+5. Save, then open the listing as a signed-out visitor to verify its public title, tool count, and repository URL. If ownership or edit controls are unavailable, contact Glama support rather than creating an unverified duplicate.
 
 Glama's current published `https://glama.ai/mcp/schemas/server.json` schema defines the `maintainers` field; it does **not** formally define a display-name field. Therefore do **not** assume changing repository `glama.json` will rename the live listing.
 

@@ -46,7 +46,7 @@ GitHub Actions also builds and publishes these assets on this feature branch.
 
 ## Source review
 
-- [PR #1 — Validation hardening](https://github.com/Muthukumar123/iso20022-mcp/pull/1)
-- [PR #2 — Evidence-backed investigations](https://github.com/Muthukumar123/iso20022-mcp/pull/2) (stacked on PR #1)
+- [PR #1 — Validation hardening](https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/1)
+- [PR #2 — Evidence-backed investigations](https://github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp/pull/2) (originally stacked on PR #1; both are merged)
 
 All examples are synthetic. The explanations distinguish facts reported in a bank status message from interpretations and hypotheses. Bank-governed authorization and human review remain necessary for any consequential payment action.

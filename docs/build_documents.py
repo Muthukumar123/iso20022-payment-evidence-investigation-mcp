@@ -239,7 +239,7 @@ def docx(images):
     p.alignment=WD_ALIGN_PARAGRAPH.CENTER
     document.add_paragraph('Implemented: deterministic message validation and evidence correlation. Proposed: authenticated bank retrieval, gateway, live payment hubs and legacy connectors.')
     document.add_picture(str(images['logical_architecture']),width=DI(6.95))
-    document.add_paragraph('Repository: github.com/Muthukumar123/iso20022-mcp • PR #1 + PR #2')
+    document.add_paragraph('Repository: github.com/Muthukumar123/iso20022-payment-evidence-investigation-mcp • PR #1 + PR #2')
     document.add_page_break()
     document.add_heading('Part I — Solution Architecture and Integration',level=1)
     render_markdown(document,BASE/'ISO20022_MCP_Solution_Architecture.md')

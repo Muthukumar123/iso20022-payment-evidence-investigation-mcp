@@ -49,7 +49,7 @@ Create preview JSON without credentials:
 python scripts/publish_gamma.py --dry-run
 ```
 
-To generate a Gamma-hosted deck, configure `GAMMA_API_KEY` as a secret and run the **Publish FEI executive narrative to Gamma** manual GitHub Actions workflow, or run the script locally with `--publish`. API generation consumes Gamma credits. The workflow is manual by design and will not send real payment data. Deployment is **not complete** until Gamma returns an actual `gammaUrl`.
+To generate a Gamma-hosted deck, obtain a Gamma account API key (never commit it) and run the script locally with `--publish --confirm-external-generation`. After this new workflow is merged into the repository's **default branch**, configure the `GAMMA_API_KEY` GitHub Actions secret and manually select the **Publish FEI executive narrative to Gamma** workflow. GitHub may require a workflow to be present on the default branch before manual dispatch becomes available. Generation consumes Gamma credits; it is explicitly user-triggered and sends only the reviewed synthetic Markdown. Deployment is **not complete** until Gamma returns an actual `gammaUrl`.
 
 ## MVP acceptance criteria
 

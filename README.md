@@ -6,6 +6,23 @@ Agents handling payments fail in predictable ways: they invent reject codes, mis
 follow instructions hidden in free-text fields like remittance information. This server gives them
 deterministic tools for the parts that must be exact, and treats message free text as untrusted data.
 
+## FinServ Evidence Intelligence (FEI) — product direction
+
+The repository also contains a proposed **FinServ Evidence Intelligence (FEI)**
+solution blueprint. Its first product is an evidence-backed, **read-only payment
+exception investigation copilot**, reusing the deterministic ISO 20022 MCP tools.
+This is an evolution of the existing project, **not** a live banking product or
+an AI payment executor.
+
+- [FEI product vision and implementation boundaries](docs/finserv/README.md)
+- [High-level architecture, bank integration and trust boundaries](docs/finserv/ARCHITECTURE.md)
+- [Security guardrails and residual risks](docs/finserv/SECURITY_AND_GUARDRAILS.md)
+- [Controlled MVP roadmap and pilot KPIs](docs/finserv/MVP_ROADMAP.md)
+- [Gamma AI executive narrative](docs/finserv/GAMMA_EXECUTIVE_DECK.md)
+
+Gamma AI creates executive presentations; **Glama** is a separate MCP discovery
+and hosting provider. Neither is part of the bank's payment execution path.
+
 ## Tools
 
 | Tool | What it does |

@@ -1,0 +1,25 @@
+flowchart TB
+    U["Payment Operations Analyst"] --> P["FEI Investigation Copilot"]
+    subgraph Z1["AI zone — untrusted planning"]
+      P --> A["AI Agent<br/>Tool selection / evidence summarization"]
+    end
+    subgraph Z2["Controlled access boundary — bank owned"]
+      A --> G["MCP Gateway<br/>OIDC / RBAC / ABAC / quotas / masked audit<br/>TARGET"]
+      G --> T["FEI MCP tool surface<br/>parse · validate · investigate · lookup · explain · generate"]
+    end
+    subgraph Z3["Deterministic evidence zone"]
+      T --> E["ISO 20022 correlation + evidence provenance<br/>IMPLEMENTED in feature PR"]
+      E --> R["Approved rules / versioned reference data<br/>TARGET"]
+      E --> ES["Read-only evidence store / timeline<br/>TARGET"]
+    end
+    subgraph Z4["Bank protected zone"]
+      ES --> B["Authorized read-only adapter<br/>TARGET"]
+      B --> H["Payment Hub / SWIFT Archive"]
+      B --> C["Core Banking / zOS"]
+      B --> L["Legacy MQ / SOAP / Batch"]
+    end
+    H -. "optional event feed" .-> S["Bank-approved broker (MQ / Kafka / Pulsar / Kinesis)<br/>TARGET / OPTIONAL"]
+    S -. "normalize / deduplicate" .-> ES
+    style G fill:#def4ea,stroke:#087e71
+    style E fill:#dbeafa,stroke:#224e86
+    style B fill:#ffedce,stroke:#98600b

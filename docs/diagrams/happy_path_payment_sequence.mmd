@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    actor Analyst
+    participant Client as AI Agent / MCP Client
+    participant Server as ISO 20022 MCP Server
+    participant Parser as XML Parser & Validator
+    participant Engine as Evidence Correlation
+    participant Codes as Code Lookup
+    Analyst->>Client: Analyze supplied pacs.008 and pacs.002
+    Client->>Server: initialize / initialized
+    Client->>Server: tools/list
+    Server-->>Client: Tool definitions and schemas
+    Client->>Server: tools/call validate_message(pacs.008)
+    Server->>Parser: Validate business + schema/security state
+    Parser-->>Server: business_valid=true, schema=not_configured
+    Server-->>Client: Structured validation result
+    Client->>Server: tools/call investigate_payment(pacs.008,pacs.002)
+    Server->>Engine: Correlate OrgnlMsgId + EndToEndId/UETR
+    Engine->>Codes: lookup_code(AC04)
+    Codes-->>Engine: Closed account (bank-reported reason)
+    Engine-->>Server: Matched status RJCT + evidence paths
+    Server-->>Client: Evidence, limitations, no automatic retry
+    Client-->>Analyst: Cited rejection explanation + human review

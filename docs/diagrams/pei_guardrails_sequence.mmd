@@ -1,0 +1,35 @@
+sequenceDiagram
+    autonumber
+    actor Analyst
+    participant Agent as AI / MCP Client
+    participant Gate as Bank Gateway (target)
+    participant Adapter as Read-only Adapter (target)
+    participant Bank as Payment Hub / Archive
+    participant Tool as MCP Investigation Tool
+    participant Engine as Deterministic Evidence Core
+
+    Analyst->>Agent: Investigate REF123 (authorized purpose)
+    opt Future live retrieval; not implemented
+        Agent->>Gate: get_payment_evidence(REF123)
+        Gate->>Gate: Authenticate and authorize; minimize PII; audit
+        alt Access denied or missing consent
+            Gate-->>Agent: Denied, no payment data returned
+        else Authorized read
+            Gate->>Adapter: Reference-bound read request
+            Adapter->>Bank: Fetch original payment and status XML
+            Bank-->>Adapter: Source-identified messages + timestamps
+            Adapter-->>Agent: Minimum approved evidence
+        end
+    end
+    Agent->>Tool: tools/list / validate_message(pacs.008)
+    Tool->>Engine: Parse, validate, mark untrusted free text
+    Engine-->>Agent: Business / schema / security outcomes
+    Agent->>Tool: investigate_payment(pacs.008, pacs.002)
+    Tool->>Engine: Exact ID correlation, code lookup, source ledger
+    alt Missing match, unknown code or incomplete evidence
+        Engine-->>Agent: Unmatched / unknown + human escalation
+    else Bank-reported RJCT / AC04
+        Engine-->>Agent: Field evidence + reported meaning + limitations
+    end
+    Agent-->>Analyst: Explain evidence; no automatic retry
+    Note over Agent,Bank: No payment-write method is exposed by PEI

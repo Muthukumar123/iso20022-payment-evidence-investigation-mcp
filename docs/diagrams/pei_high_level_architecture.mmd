@@ -1,0 +1,28 @@
+flowchart TB
+  subgraph channels["CHANNELS"]
+    app["Banking portal / REST app (target)"]
+    agent["Payment Operations AI / MCP client"]
+  end
+  subgraph access["GOVERNED ACCESS (target)"]
+    idp["Bank IAM: OIDC + RBAC + mTLS"]
+    gw["Gateway: tools allowlist · policy · PII controls · audit"]
+  end
+  subgraph core["PEI EVIDENCE CORE (implemented locally)"]
+    tools["Six MCP tools (read-only)"]
+    engine["ISO 20022 parse · validate · correlate · provenance"]
+  end
+  subgraph bank["BANK-OWNED READ BOUNDARY (target)"]
+    adp["Approved, read-only adapters"]
+    hub["Payment hub"]
+    corebank["Core banking / ledger"]
+    legacy["z/OS Connect · MQ · SOAP · batch"]
+  end
+  app --> gw
+  agent --> gw
+  idp --> gw
+  gw --> tools
+  tools --> engine
+  engine -.-> adp
+  adp --> hub
+  adp --> corebank
+  adp --> legacy

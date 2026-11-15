@@ -1,0 +1,17 @@
+sequenceDiagram
+ autonumber
+ participant Agent as AI / MCP Client
+ participant Gateway as Enterprise MCP Gateway
+ participant Adapter as Legacy MQ Adapter
+ participant MQ as IBM MQ
+ participant Legacy as Legacy Payment System
+ Agent->>Gateway: get_payment_status(REF123)
+ Gateway->>Adapter: Authorized lookup + correlation ID
+ Adapter->>MQ: Put read-only query with ReplyTo and TTL
+ MQ->>Legacy: Deliver to approved consumer
+ Legacy->>Legacy: Read-only status lookup
+ Legacy-->>MQ: Reply with status and source event ID
+ MQ-->>Adapter: Matching reply before deadline
+ Adapter->>Adapter: Validate IDs, recency, mask sensitive data
+ Adapter-->>Gateway: Canonical status or explicit unavailable
+ Gateway-->>Agent: Provenance-backed result

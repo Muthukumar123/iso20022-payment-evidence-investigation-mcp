@@ -1,0 +1,19 @@
+sequenceDiagram
+ autonumber
+ actor Analyst
+ participant Agent as AI Agent / MCP Client
+ participant Gateway as MCP Gateway (future)
+ participant Adapter as Bank Adapter (future)
+ participant Hub as Payment Hub / Archive
+ participant Engine as ISO 20022 Evidence Engine
+ Analyst->>Agent: Why was REF123 rejected?
+ Agent->>Gateway: get_payment_evidence(REF123)
+ Gateway->>Gateway: Authenticate / authorize / audit
+ Gateway->>Adapter: Authorized read
+ Adapter->>Hub: Retrieve pacs.008 and pacs.002
+ Hub-->>Adapter: Source records and identifiers
+ Adapter-->>Agent: Authorized minimum evidence
+ Agent->>Engine: investigate_payment(pacs008, pacs002)
+ Engine->>Engine: Exact correlation and status-code interpretation
+ Engine-->>Agent: Provenance, limitations, no-auto-retry
+ Agent-->>Analyst: Evidence-backed explanation and human next step

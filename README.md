@@ -10,11 +10,26 @@ deterministic tools for the parts that must be exact, and treats message free te
 
 | Tool | What it does |
 |---|---|
-| `parse_message` | pacs.008 / pacs.002 XML → structured JSON (namespace-agnostic, XXE-safe) |
+| `parse_message` | pacs.008 / pacs.002 XML → structured results (version-aware, bounded, XXE-safe) |
 | `validate_message` | IBAN mod-97, BIC format, amounts and currency decimals, required parties, counts, free-text limits, prompt-injection patterns — each issue mapped to its likely reject code |
 | `explain_message` | Deterministic plain-language summary: who pays whom, how much, status and reasons |
 | `lookup_code` | Status reason / transaction status / charge bearer codes — returns `found: false` instead of guessing |
 | `generate_test_message` | Synthetic valid and defective messages for testing (no real customer data) |
+| `investigate_payment` | Exactly correlate a supplied pacs.008 and pacs.002; return bank-reported rejection evidence, limits and human-reviewed next steps |
+
+## Architecture and complete happy-path walkthrough
+
+- [Documentation index](docs/README.md)
+- [Complete local and proposed bank-connected happy path](docs/ISO20022_MCP_Happy_Path_Complete_Flow.md)
+- [Core banking, legacy integration and security design](docs/ISO20022_MCP_Solution_Architecture.md)
+- [Word design document](docs/generated/ISO20022_MCP_Architecture_And_Happy_Path.docx)
+- [PowerPoint architecture presentation](docs/generated/ISO20022_Payment_Intelligence_Architecture.pptx)
+- [Editable Mermaid diagrams](docs/diagrams/)
+
+The Word/PPTX and rendered diagrams are generated reproducibly with
+`python docs/build_documents.py`. The GitHub documentation workflow publishes
+them to the feature branch. Production bank connections and a remote authenticated
+MCP gateway are **not** implemented.
 
 ## Quick start
 
@@ -130,6 +145,44 @@ pytest -q
 The suite includes actual stdio MCP initialization/tool-discovery checks,
 validation security regression tests, and authorization tests for the
 read-only adapter interface.
+
+
+## Evidence-backed payment investigations (experimental)
+
+The `investigate_payment(pacs008_xml, pacs002_xml)` MCP tool
+correlates supplied pacs.008 and pacs.002 messages by original message ID
+**and** exact transaction identifiers. It returns a read-only evidence ledger,
+reported status codes, interpretation limits, and safe human-reviewed
+recommendations. It refuses to attribute unrelated statuses to a payment.
+
+Example (Python API, synthetic messages):
+
+```python
+from iso20022_mcp import generate, parser
+from iso20022_mcp.investigate import investigate_payment
+
+original = generate.generate_pacs008()
+p = parser.parse_message(original)
+status = generate.generate_pacs002(
+    "AC04", p["msg_id"], p["transactions"][0]["end_to_end_id"]
+)
+report = investigate_payment(original, status)
+assert report["cases"][0]["correlation"] == "matched"
+assert report["cases"][0]["reported_reasons"][0]["code"] == "AC04"
+```
+
+The engine does not query live banking systems, verify real account status,
+apply CBPR+/SEPA business rules or initiate any repair. A reason reported in
+pacs.002 remains a bank-reported reason, not an independently verified cause.
+
+Synthetic, transparent capability comparison:
+
+```bash
+python evals/compare_investigation.py
+```
+
+This comparison demonstrates exact correlation, unknown-code safety, and
+provenance in fixture cases; it is **not** a real-world accuracy study.
 
 ## Roadmap
 

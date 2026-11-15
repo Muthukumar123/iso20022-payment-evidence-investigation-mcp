@@ -1,0 +1,74 @@
+name: Build executive PowerPoint and PDF
+on:
+  push:
+    paths:
+      - "docs/executive/build_executive_slides.js"
+      - ".github/workflows/build-executive-deck.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install slide generator dependency
+        run: npm install --no-save pptxgenjs@4.0.0
+      - name: Generate editable executive PowerPoint
+        env:
+          OUTPUT_PPTX: docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx
+        run: node docs/executive/build_executive_slides.js
+      - name: Install PDF conversion tools
+        run: |
+          if ! command -v libreoffice >/dev/null 2>&1 || ! command -v pdfinfo >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends libreoffice-impress poppler-utils
+          fi
+      - name: Export matching executive PDF
+        run: |
+          libreoffice -env:UserInstallation=file:///tmp/pei-executive-pdf-${GITHUB_RUN_ID} \
+            --headless --convert-to pdf:impress_pdf_Export \
+            --outdir docs/executive \
+            docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx
+      - name: Validate generated PPTX and PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          target = Path("docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx")
+          assert target.is_file() and target.stat().st_size > 10000
+          with ZipFile(target) as z:
+              files = set(z.namelist())
+              assert "ppt/slides/slide1.xml" in files
+              assert "ppt/slides/slide2.xml" in files
+              assert "ppt/slides/slide11.xml" in files
+              assert "ppt/slides/slide12.xml" not in files
+          print(f"Validated eleven-slide PPTX ({target.stat().st_size} bytes)")
+          pdf = Path("docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pdf")
+          assert pdf.is_file() and pdf.stat().st_size > 10000, "Missing or empty PDF"
+          assert pdf.read_bytes().startswith(b"%PDF"), "Invalid PDF signature"
+          PY
+          test "$(pdfinfo docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pdf | awk '/^Pages:/ {print $2}')" = "11"
+          echo "Validated matching eleven-page executive PDF"
+      - name: Commit final PowerPoint and PDF to source branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pptx docs/executive/ISO20022_Payment_Intelligence_Executive_Overview.pdf
+          if git diff --cached --quiet; then
+            echo "Executive PowerPoint and PDF unchanged"
+            exit 0
+          fi
+          git commit -m "docs: publish final eleven-slide executive PowerPoint and PDF"
+          git push origin "HEAD:$BRANCH"

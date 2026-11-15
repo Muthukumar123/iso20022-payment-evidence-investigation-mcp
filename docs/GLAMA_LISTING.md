@@ -33,6 +33,30 @@ Glama's current published `https://glama.ai/mcp/schemas/server.json` schema defi
 
 This document is a copy source for human review, **not** proof of an applied Glama dashboard update. GitHub documentation changes do not establish a new Glama server or deployed Streamable HTTP endpoint.
 
+## If Glama still lists only five tools
+
+Glama's earlier snapshot was taken before the `investigate_payment` tool reached `main`, and the repository has since been renamed. **Do not assume the stale listing means the sixth tool is missing from the server.**
+
+The repository's CI now verifies that the actual stdio MCP `tools/list` response contains exactly six tools and that `investigate_payment` can be invoked through the protocol. The project also provides a reproducible, unprivileged `Dockerfile` so Glama can build and inspect the source without inventing its own build recipe.
+
+**Maintainer recovery checklist:**
+
+1. Open the existing Glama listing associated with `Muthukumar123`, not another `iso20022-mcp` project.
+2. Check the **Admin** / **Manage** area for a rescan or repository synchronization control, if one is offered.
+3. Ensure its source points at the renamed public GitHub repository shown above, then request a fresh build/index.
+4. If no refresh control is available, contact `support@glama.ai` with the existing listing URL, the new GitHub URL, the latest commit SHA and the request: *Please re-associate and rescan this renamed repository; the current source exposes six MCP tools including investigate_payment, but the directory still shows five.*
+5. Verify that Glama's new scan lists all six tools and uses the new display name. Avoid duplicate submissions unless Glama support asks for one.
+
+**Local reproduction:**
+
+```bash
+pip install -e ".[dev]"
+pytest -q tests/test_mcp_integration.py
+docker build -t iso20022-evidence-mcp .
+```
+
+The Docker image runs `iso20022-mcp` via local stdio with no exposed HTTP port. **It is not a remote banking gateway or public hosted endpoint.** Source scans and billing are separate from deploying a persistent Glama instance.
+
 ## Scope and safety
 
 This is **ISO 20022 payment analysis**, not an Open Banking account-connectivity API. It provides read-only local XML tools, not live bank integration. No real payment/customer data should be used with a public demo or third-party hosted MCP service without a formal privacy and security assessment.
